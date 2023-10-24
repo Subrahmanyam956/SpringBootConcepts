@@ -36,5 +36,27 @@ public class ImageController {
         }
         return imageService.addPhoto(newPhoto);
     }
-        
+
+    @GetMapping(value = "/getImage")
+    public byte[] getPicture(@RequestParam(value = "id") String id) {
+        byte[] ans = null;
+        try {
+            ans = imageService.getPhoto(id);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return ans;
+    }
+
+    @GetMapping(value = "/images")
+    public byte[] getAllImages() {
+        byte[] ans = null;
+        try {
+            ans = imageService.getAllPictures();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return ans;
+    }
+
 }
