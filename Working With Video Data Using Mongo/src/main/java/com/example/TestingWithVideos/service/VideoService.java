@@ -1,7 +1,6 @@
 package com.example.TestingWithVideos.service;
 
 import com.example.TestingWithVideos.model.Video;
-import com.example.TestingWithVideos.model.VideoSave;
 import com.example.TestingWithVideos.repository.VideoRepository;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -19,30 +18,32 @@ import java.io.IOException;
 
 @Service
 public class VideoService {
-    @Autowired
-    private GridFsTemplate gridFsTemplate;
 
-    @Autowired
-    private GridFsOperations operations;
+    private final GridFsTemplate gridFsTemplate;
+    private final GridFsOperations operations;
 
-    @Autowired
-    private VideoRepository videoRepository;
 
+    public VideoService(GridFsTemplate gridFsTemplate, GridFsOperations operations) {
+        this.gridFsTemplate = gridFsTemplate;
+        this.operations = operations;
+    }
 
     public String addVideo(String title, MultipartFile file) throws IOException {
         DBObject metaData = new BasicDBObject();
         metaData.put("type", "video");
         metaData.put("title", title);
-        ObjectId id = gridFsTemplate.store(
-                file.getInputStream(), file.getName(), file.getContentType(), metaData);
+        ObjectId id = gridFsTemplate.store(file.getInputStream(), file.getName(), file.getContentType(), metaData);
         return id.toString();
     }
 
-    public String getVideo(String id) throws IllegalStateException, IOException {
+    public Video getVideo(String id) throws IllegalStateException, IOException {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
         Video video = new Video();
-        video.setTitle(file.getMetadata().get("title").toString());
-        video.setStream(operations.getResource(file).getInputStream());
-        return video.getTitle();
+        if((null != file) && (null != file.getMetadata())) {
+            video.setTitle(file.getMetadata().get("title").toString());
+            //video.setStream(operations.getResource(file).getInputStream());
+            video.setDataBytes(operations.getResource(file).getInputStream().toString().getBytes());
+        }
+        return video;
     }
 }

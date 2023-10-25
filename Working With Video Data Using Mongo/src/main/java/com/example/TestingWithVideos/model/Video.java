@@ -5,6 +5,15 @@ import java.io.InputStream;
 public class Video {
         private String title;
         private InputStream stream;
+        private byte[] dataBytes;
+
+    public byte[] getDataBytes() {
+        return dataBytes;
+    }
+
+    public void setDataBytes(byte[] dataBytes) {
+        this.dataBytes = dataBytes;
+    }
 
     public String getTitle() {
         return title;

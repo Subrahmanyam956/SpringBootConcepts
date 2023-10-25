@@ -29,8 +29,8 @@ public class VideoController {
 
     @GetMapping("/video/getVideo")
     @ResponseStatus(HttpStatus.OK)
-    public String getVideo(@RequestParam("id") String id) throws IOException {
+    public byte[] getVideo(@RequestParam("id") String id) throws IOException {
         logger.info("Caught the request");
-        return videoService.getVideo(id);
+        return videoService.getVideo(id).getStream().toString().getBytes();
     }
 }
