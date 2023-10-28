@@ -4,6 +4,7 @@ import com.example.TestingWithVideos.service.VideoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,12 +20,15 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-    @PostMapping("/video/saveVideo")
+    @PostMapping(value = "/video/saveVideo", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public String saveVideo(@RequestParam("file")MultipartFile file) throws IOException {
         logger.info("Caught the request");
         String videoTitle = UUID.randomUUID().toString();
-        return videoService.addVideo(videoTitle, file);
+        String title = videoService.addVideo(videoTitle, file);
+        System.gc();
+        logger.info("finished Saving");
+        return title;
     }
 
     @GetMapping("/video/getVideo")
