@@ -41,8 +41,8 @@ public class VideoService {
         Video video = new Video();
         if((null != file) && (null != file.getMetadata())) {
             video.setTitle(file.getMetadata().get("title").toString());
-            //video.setStream(operations.getResource(file).getInputStream());
-            video.setDataBytes(operations.getResource(file).getInputStream().toString().getBytes());
+            video.setStream(operations.getResource(file).getInputStream());
+            //video.setDataBytes(operations.getResource(file).getInputStream().toString().getBytes());
         }
         return video;
     }
